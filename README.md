@@ -1,4 +1,8 @@
-# Welcome to [Slidev](https://github.com/slidevjs/slidev)!
+# Slidev Docus
+
+Slides to explain how and why to use [Docus](https://docus.dev/).
+
+## Contributing
 
 To start the slide show:
 
@@ -9,3 +13,7 @@ To start the slide show:
 Edit the [slides.md](./slides.md) to see the changes.
 
 Learn more about Slidev on [documentations](https://sli.dev/).
+
+## Authors
+
+- [Barbapapazes](https://github.com/barbapapazes)
