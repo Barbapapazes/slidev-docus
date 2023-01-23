@@ -1,24 +1,53 @@
 name: Deploy pages
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+group: "pages"
+cancel-in-progress: true
 
 jobs:
-  deploy:
+  setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "18"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm install
+
       - name: Install slidev
         run: npm i -g @slidev/cli
+
       - name: Build
         run: slidev build --base /slidev-docus
-      - name: Deploy pages
-        uses: crazy-max/ghaction-github-pages@v2
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
         with:
-          build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: dist
+
+  deploy:
+    needs: [setup]
+    name: Deploy to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
